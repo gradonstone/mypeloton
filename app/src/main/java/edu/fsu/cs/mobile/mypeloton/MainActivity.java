@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        // mGoogleSignInClient.signOut();
+        //mGoogleSignInClient.signOut();
 
         googleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,13 +69,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("Main Activity", "Pressed Login Button");
-                boolean is_empty = true;
-                if (email.getText().toString() == "")
-                    is_empty = false;
-                else if (password.getText().toString() == "")
-                    is_empty = false;
+                boolean is_empty = false;
+                String verifyEmail = email.getText().toString();
+                String verifyPass = password.getText().toString();
+                if(verifyEmail.matches(""))
+                    is_empty = true;
+                else if(verifyPass.matches(""))
+                    is_empty = true;
 
-                if (!is_empty)
+                if (is_empty)
                     Toast.makeText(MainActivity.this, "Please Enter both Email and Password", Toast.LENGTH_SHORT).show();
                 else {
                     signInWithEmail(email.getText().toString(), password.getText().toString());
@@ -87,13 +89,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("Main Activity", "Pressed Register Button");
-                boolean is_empty = true;
-                if (email.getText().toString() == "")
-                    is_empty = false;
-                else if (password.getText().toString() == "")
-                    is_empty = false;
+                boolean is_empty = false;
+                String verifyEmail = email.getText().toString();
+                String verifyPass = password.getText().toString();
+                if(verifyEmail.matches(""))
+                    is_empty = true;
+                else if(verifyPass.matches(""))
+                    is_empty = true;
 
-                if (!is_empty)
+                if (is_empty)
                     Toast.makeText(MainActivity.this, "Please Enter both Email and Password", Toast.LENGTH_SHORT).show();
                 else {
                     createAccountWithEmail(email.getText().toString(), password.getText().toString());
@@ -198,11 +202,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        //GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
-            // FirebaseAuth.getInstance().signOut();
-            // mGoogleSignInClient.signOut();
+            //FirebaseAuth.getInstance().signOut();
+            //mGoogleSignInClient.signOut();
             updateUI(currentUser);
         }
     }

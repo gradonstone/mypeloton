@@ -59,16 +59,10 @@
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_login_button"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_alignParentBottom="true"/>
-
-    <Button
-        android:id="@+id/email_login"
-        android:layout_width="wrap_content"
+        android:layout_width="213dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Login With Email"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="138dp" />
 
 </RelativeLayout>
