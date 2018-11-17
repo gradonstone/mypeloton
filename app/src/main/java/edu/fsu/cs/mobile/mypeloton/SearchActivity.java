@@ -1,5 +1,6 @@
 package edu.fsu.cs.mobile.mypeloton;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +19,7 @@ public class SearchActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private DatabaseReference timeRef, userRef, ridetypeRef, distanceRef;
     private Spinner distanceSpinner, timeSpinner, typeSpinner;
-    private Button find;
+    private Button requestButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +28,20 @@ public class SearchActivity extends AppCompatActivity {
         distanceSpinner = (Spinner) findViewById(R.id.distance_spinner);
         timeSpinner = findViewById(R.id.time_spinner);
         typeSpinner = findViewById(R.id.type_spinner);
-        find = findViewById(R.id.button4);
+        requestButton = findViewById(R.id.request_button);
 
-        find.setOnClickListener(new View.OnClickListener() {
+        requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timeRef.setValue(timeSpinner.getSelectedItem().toString());
+
+                //Causes app to crash. Null object reference at 39.
+
+                //timeRef.setValue(timeSpinner.getSelectedItem().toString());
                 //ridetypeRef.setValue(typeSpinner.getSelectedItem().toString());
-                distanceRef.setValue(distanceSpinner.getSelectedItem().toString());
+                //distanceRef.setValue(distanceSpinner.getSelectedItem().toString());
+
+                Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
+                startActivity(myIntent);
             }
         });
 
