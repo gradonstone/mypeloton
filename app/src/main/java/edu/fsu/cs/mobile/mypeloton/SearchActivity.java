@@ -59,6 +59,9 @@ public class SearchActivity extends AppCompatActivity {
 
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
                 myIntent.putExtra("uid", uid);
+
+                // start service here
+
                 startActivity(myIntent);
             }
         });
