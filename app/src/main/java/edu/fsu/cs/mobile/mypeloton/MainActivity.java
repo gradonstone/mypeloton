@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("MainActivity", "firebaseAuthWithGoogle:" + acct.getId());
+        Log.d("Main Activity", "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -181,6 +181,10 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("Main Activity", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+                            Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
+                            myIntent.putExtra("uid", user.getUid());
+                            myIntent.putExtra("email", user.getEmail());
+                            startActivity(myIntent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Main Activity", "signInWithCredential:failure", task.getException());
@@ -197,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
         // GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+
     }
 
     // updates the UI to SearchActivity with the firebase user
