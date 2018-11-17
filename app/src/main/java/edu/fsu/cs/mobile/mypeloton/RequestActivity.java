@@ -65,7 +65,9 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                                 int time = requestSnapshot.child("time").getValue(Integer.class);
                                 int distance = requestSnapshot.child("distance").getValue(Integer.class);
                                 int active = requestSnapshot.child("active").getValue(Integer.class);
-                                Request request = new Request(userID, email, rideType, distance, time, active);
+                                int longitude = requestSnapshot.child("longitude").getValue(Integer.class);
+                                int latitude = requestSnapshot.child("latitude").getValue(Integer.class);
+                                Request request = new Request(userID, email, rideType, distance, time, longitude, latitude, active);
                                 requestList.add(request);
                             }
                         }

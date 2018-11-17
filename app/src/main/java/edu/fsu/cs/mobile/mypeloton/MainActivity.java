@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
                                 myIntent.putExtra("uid", user.getUid());
+                                myIntent.putExtra("email", user.getEmail());
                                 startActivity(myIntent);
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
                             myIntent.putExtra("uid", user.getUid());
+                            myIntent.putExtra("email", user.getEmail());
                             startActivity(myIntent);
                         }
                         else {
@@ -178,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
                             updateUI(user);
                             Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
                             myIntent.putExtra("uid", user.getUid());
+                            myIntent.putExtra("email", user.getEmail());
                             startActivity(myIntent);
                         } else {
                             // If sign in fails, display a message to the user.
