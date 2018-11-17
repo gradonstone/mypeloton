@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.username_edit);
         password = findViewById(R.id.pass_edit);
 
+
+        //----------------For google sign in --------------------
+
         googleLogin = (SignInButton) findViewById(R.id.google_login_button);
         mAuth = FirebaseAuth.getInstance();
 
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        mGoogleSignInClient.signOut();
+        // mGoogleSignInClient.signOut();
 
         googleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
                                 myIntent.putExtra("uid", user.getUid());
+                                myIntent.putExtra("email", user.getEmail());
                                 startActivity(myIntent);
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -133,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
                             myIntent.putExtra("uid", user.getUid());
+                            myIntent.putExtra("email", user.getEmail());
                             startActivity(myIntent);
                         }
                         else {
@@ -178,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                             updateUI(user);
                             Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
                             myIntent.putExtra("uid", user.getUid());
+                            myIntent.putExtra("email", user.getEmail());
                             startActivity(myIntent);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -192,16 +198,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        // GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
-            FirebaseAuth.getInstance().signOut();
-            mGoogleSignInClient.signOut();
+            // FirebaseAuth.getInstance().signOut();
+            // mGoogleSignInClient.signOut();
+            updateUI(currentUser);
         }
-        //updateUI(currentUser);
     }
 
+    // updates the UI to SearchActivity with the firebase user
+
     private void updateUI(FirebaseUser user) {
-        if(user != null)
-            FirebaseAuth.getInstance().signOut();
+        if(user != null) {
+            // FirebaseAuth.getInstance().signOut();
+            Intent mIntent =  new Intent(MainActivity.this, SearchActivity.class);
+            mIntent.putExtra("uid", user.getUid());
+            mIntent.putExtra("email",user.getEmail());
+            startActivity(mIntent);
+        }
     }
 }

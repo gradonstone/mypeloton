@@ -24,6 +24,10 @@
         <activity android:name=".SearchActivity" />
         <activity android:name=".RequestActivity" />
         <activity android:name=".Messenger"></activity>
+
+        <service
+            android:name=".SearchService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

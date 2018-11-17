@@ -23,7 +23,7 @@ public class SearchActivity extends AppCompatActivity {
     private Button requestButton;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private String uid;
+    private String uid, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,7 @@ public class SearchActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
         final FirebaseUser user = mAuth.getCurrentUser();
         uid = (String) getIntent().getExtras().get("uid");
+        email = (String) getIntent().getExtras().get("email");
 
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,13 +49,24 @@ public class SearchActivity extends AppCompatActivity {
                 String type = typeSpinner.getSelectedItem().toString();
                 int time = Integer.parseInt(timeString);
                 int distance = Integer.parseInt(distanceString);
-                String userID = "user";
-                String email = "email";
+                String userID = uid;
+                String userEmail = email;
+                //placeholders for now
+                double longitude = 0;
+                double latitude = 0;
 
-                writeNewRequest(userID, email, type, distance,time);
+                writeNewRequest(userID, userEmail, type, distance, time, longitude, latitude);
 
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
-                myIntent.putExtra("uid", uid);
+                myIntent.putExtra(SearchService.UID, uid);
+
+                // start SearchService here
+                myIntent.putExtra(SearchService.LONGITUDE, longitude);
+                myIntent.putExtra(SearchService.LATITUDE, latitude);
+                myIntent.putExtra(SearchService.DISTANCE, distance);
+
+
+
                 startActivity(myIntent);
             }
         });
@@ -84,10 +96,10 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-    private void writeNewRequest(String userID, String email, String ride_type, int distance, int time)
+    private void writeNewRequest(String userID, String email, String ride_type, int distance, int time, double longitude, double latitude)
     {
         //create a request object
-        Request request = new Request(userID, email, ride_type, distance, time, 1);
+        Request request = new Request(userID, email, ride_type, distance, time, longitude, latitude, 1);
         //throw it in the database under the requests 'table'
         mDatabase.child("requests").child(uid).setValue(request);
     }
