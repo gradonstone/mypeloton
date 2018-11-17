@@ -87,13 +87,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("Main Activity", "Pressed Register Button");
-                boolean is_empty = true;
-                if (email.getText().toString() == "")
-                    is_empty = false;
-                else if (password.getText().toString() == "")
-                    is_empty = false;
-
-                if (!is_empty)
+                boolean is_empty = false;
+                String verifyEmail = email.getText().toString();
+                String verifyPass = password.getText().toString();
+                if(verifyEmail.matches(""))
+                    is_empty = true;
+                else if(verifyPass.matches(""))
+                    is_empty = true;
+                if (is_empty)
                     Toast.makeText(MainActivity.this, "Please Enter both Email and Password", Toast.LENGTH_SHORT).show();
                 else {
                     createAccountWithEmail(email.getText().toString(), password.getText().toString());
