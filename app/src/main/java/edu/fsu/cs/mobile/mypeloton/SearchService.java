@@ -8,8 +8,12 @@ import android.support.annotation.Nullable;
 
 public class SearchService extends IntentService {
     private static final String TAG = "SearchService";
+    public static final String LONGITUDE = "longitude";
+    public static final String LATITUDE = "latitude";
+    public static final String DISTANCE = "distance";
+    public static final String UID = "uid";
 
-    SearchService() {
+    public SearchService() {
         super("SearchService");
     }
 
@@ -20,6 +24,7 @@ public class SearchService extends IntentService {
         String xLocation, yLocation, distance;
         if (extras != null) {
             // get x, y and distance
+
 
         }
     }

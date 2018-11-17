@@ -52,15 +52,20 @@ public class SearchActivity extends AppCompatActivity {
                 String userID = uid;
                 String userEmail = email;
                 //placeholders for now
-                int longitude = 0;
-                int latitude = 0;
+                double longitude = 0;
+                double latitude = 0;
 
                 writeNewRequest(userID, userEmail, type, distance, time, longitude, latitude);
 
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
-                myIntent.putExtra("uid", uid);
+                myIntent.putExtra(SearchService.UID, uid);
 
-                // start service here
+                // start SearchService here
+                myIntent.putExtra(SearchService.LONGITUDE, longitude);
+                myIntent.putExtra(SearchService.LATITUDE, latitude);
+                myIntent.putExtra(SearchService.DISTANCE, distance);
+
+
 
                 startActivity(myIntent);
             }
@@ -91,7 +96,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-    private void writeNewRequest(String userID, String email, String ride_type, int distance, int time, int longitude, int latitude)
+    private void writeNewRequest(String userID, String email, String ride_type, int distance, int time, double longitude, double latitude)
     {
         //create a request object
         Request request = new Request(userID, email, ride_type, distance, time, longitude, latitude, 1);

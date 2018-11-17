@@ -9,14 +9,14 @@ public class Request {
     public String ride_type;
     public int distance;
     public int time;
-    public int longitude;
-    public int latitude;
+    public double longitude;
+    public double latitude;
     //1 for active request, 0 for inactive request
     public int active;
 
     public Request(){}
 
-    public Request(String userID, String email, String ride_type, int distance, int time, int longitude, int latitude, int active)
+    public Request(String userID, String email, String ride_type, int distance, int time, double longitude, double latitude, int active)
     {
         this.userID = userID;
         this.email = email;
@@ -46,10 +46,10 @@ public class Request {
     public int getActive()
     { return active; }
 
-    public int getLongitude()
+    public double getLongitude()
     { return longitude; }
 
-    public int getLatitude()
+    public double getLatitude()
     { return latitude; }
 
 }
