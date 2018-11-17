@@ -6,8 +6,6 @@
     <string name="login_button">Login </string>
     <string name="register_button">Register </string>
     <string-array name="ride_types">
-        <!--
-            Add ride types
-            -->
+        <item>Mountain</item>
     </string-array>
 </resources>

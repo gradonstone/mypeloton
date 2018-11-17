@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -17,9 +19,11 @@ import java.util.List;
 public class SearchActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
-    private DatabaseReference timeRef, userRef, ridetypeRef, distanceRef;
     private Spinner distanceSpinner, timeSpinner, typeSpinner;
     private Button requestButton;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,28 +33,31 @@ public class SearchActivity extends AppCompatActivity {
         timeSpinner = findViewById(R.id.time_spinner);
         typeSpinner = findViewById(R.id.type_spinner);
         requestButton = findViewById(R.id.request_button);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        uid = (String) getIntent().getExtras().get("uid");
 
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //Causes app to crash. Null object reference at 39.
+                String timeString = timeSpinner.getSelectedItem().toString();
+                String distanceString = distanceSpinner.getSelectedItem().toString();
+                String type = typeSpinner.getSelectedItem().toString();
+                int time = Integer.parseInt(timeString);
+                int distance = Integer.parseInt(distanceString);
+                String userID = "user";
+                String email = "email";
 
-                //timeRef.setValue(timeSpinner.getSelectedItem().toString());
-                //ridetypeRef.setValue(typeSpinner.getSelectedItem().toString());
-                //distanceRef.setValue(distanceSpinner.getSelectedItem().toString());
+                writeNewRequest(userID, email, type, distance,time);
 
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
+                myIntent.putExtra("uid", uid);
                 startActivity(myIntent);
             }
         });
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("requests").child("user");
-        //timeRef = mDatabase.child("time");
-        //userRef = mDatabase.child("user");
-        //ridetypeRef = mDatabase.child("ride_type");
-        //distanceRef = mDatabase.child("distance");
 
         Integer[] distanceSpinnerArray = new Integer[20];
         for (int i = 1; i <= 20; i++)
@@ -75,6 +82,14 @@ public class SearchActivity extends AppCompatActivity {
         distanceSpinner.setAdapter(distanceAdapter);
         timeSpinner.setAdapter(timeAdapter);
 
+    }
+
+    private void writeNewRequest(String userID, String email, String ride_type, int distance, int time)
+    {
+        //create a request object
+        Request request = new Request(userID, email, ride_type, distance, time, 1);
+        //throw it in the database under the requests 'table'
+        mDatabase.child("requests").child(uid).setValue(request);
     }
 
     @Override
