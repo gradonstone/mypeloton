@@ -7,17 +7,44 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private DatabaseReference mDatabase;
+    private DatabaseReference timeRef, userRef, ridetypeRef, distanceRef;
+    private Spinner distanceSpinner, timeSpinner, typeSpinner;
+    private Button find;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        Spinner distanceSpinner = (Spinner) findViewById(R.id.distance_spinner);
-        Spinner timeSpinner = findViewById(R.id.time_spinner);
+        distanceSpinner = (Spinner) findViewById(R.id.distance_spinner);
+        timeSpinner = findViewById(R.id.time_spinner);
+        typeSpinner = findViewById(R.id.type_spinner);
+        find = findViewById(R.id.button4);
+
+        find.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timeRef.setValue(timeSpinner.getSelectedItem().toString());
+                //ridetypeRef.setValue(typeSpinner.getSelectedItem().toString());
+                distanceRef.setValue(distanceSpinner.getSelectedItem().toString());
+            }
+        });
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("requests").child("user");
+        //timeRef = mDatabase.child("time");
+        //userRef = mDatabase.child("user");
+        //ridetypeRef = mDatabase.child("ride_type");
+        //distanceRef = mDatabase.child("distance");
+
         Integer[] distanceSpinnerArray = new Integer[20];
         for (int i = 1; i <= 20; i++)
         {
@@ -40,5 +67,12 @@ public class SearchActivity extends AppCompatActivity {
 
         distanceSpinner.setAdapter(distanceAdapter);
         timeSpinner.setAdapter(timeAdapter);
+
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
     }
 }
