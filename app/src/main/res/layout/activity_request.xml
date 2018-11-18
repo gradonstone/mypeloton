@@ -80,7 +80,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/activity_request_container">
 
         <TextView
             android:id="@+id/searching_text_view"
@@ -89,6 +90,25 @@
             android:gravity="center_vertical|center_horizontal|center"
             android:text="Searching..."
             android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/latitude_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textIsSelectable="true"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/longitude_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="24dp"
+            android:textIsSelectable="true"
+            android:textSize="16sp" />
     </FrameLayout>
 
 </LinearLayout>
