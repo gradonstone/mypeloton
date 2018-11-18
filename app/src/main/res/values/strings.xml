@@ -6,7 +6,11 @@
     <string name="login_button">Login </string>
     <string name="register_button">Register </string>
     <string-array name="ride_types">
+        <item>Road</item>
+        <item>Cyclocross</item>
+        <item>Touring</item>
         <item>Mountain</item>
+        <item>Casual</item>
     </string-array>
 
     <string name="latitude_label">Latitude</string>

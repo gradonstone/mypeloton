@@ -18,7 +18,8 @@
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
-            android:text="Type" />
+            android:text="Type   "
+            android:textAlignment="textEnd" />
 
         <Spinner
             android:id="@+id/type_spinner"
@@ -39,7 +40,8 @@
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
-            android:text="Distance (miles)" />
+            android:text="Distance (miles)   "
+            android:textAlignment="textEnd" />
 
         <Spinner
             android:id="@+id/distance_spinner"
@@ -59,7 +61,8 @@
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
-            android:text="Request Time (minutes)" />
+            android:text="Request Time (minutes)   "
+            android:textAlignment="textEnd" />
 
         <Spinner
             android:id="@+id/time_spinner"
