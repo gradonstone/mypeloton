@@ -83,6 +83,11 @@
         android:layout_height="match_parent"
         android:id="@+id/activity_request_container">
 
+        <ListView
+            android:id="@+id/request_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <TextView
             android:id="@+id/searching_text_view"
             android:layout_width="match_parent"
