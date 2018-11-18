@@ -19,7 +19,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,8 +49,11 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
     private Button cancelRequest;
     private String uid;
     private List<Request> requestList;
+    private ArrayAdapter<String> emails;
+    private DisplayRequestAdapter requestAdapter;
     private int checker = 0;
     private Request request;
+    private ListView displayRequests;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -75,7 +81,11 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
         mDatabase = FirebaseDatabase.getInstance().getReference();
         request = (Request) getIntent().getSerializableExtra("userRequest");
 
+        displayRequests = (ListView) findViewById(R.id.request_list);
+        requestAdapter = new DisplayRequestAdapter(this, R.layout.request_item);
+
         requestList = new ArrayList<>();
+
         mDatabase.child("requests").orderByChild("ride_type").equalTo(request.getRide_type())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -103,6 +113,7 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                                 if(checker == 0) {
                                     Request request = new Request(userID, email, rideType, distance, time, longitude, latitude, active);
                                     requestList.add(request);
+                                    requestAdapter.add(new DisplayRequest(email, userID));
                                 }
                                 else
                                     checker = 0;
@@ -115,6 +126,8 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                         Toast.makeText(RequestActivity.this, "Database read failed", Toast.LENGTH_LONG).show();
                     }
                 });
+
+        displayRequests.setAdapter(requestAdapter);
 
         cancelRequest.setOnClickListener(new View.OnClickListener() {
             @Override

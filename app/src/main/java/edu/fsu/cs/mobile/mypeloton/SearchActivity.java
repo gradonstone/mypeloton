@@ -44,7 +44,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private Button requestButton;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private String uid, email, password;
+    private String uid;
     private AuthCredential credential;
 
     LocationManager lm;
@@ -131,8 +131,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         user = mAuth.getCurrentUser();
         final FirebaseUser user = mAuth.getCurrentUser();
         uid = (String) getIntent().getExtras().get("uid");
-        email = (String) getIntent().getExtras().get("email");
-        password = (String) getIntent().getExtras().get("password");
 
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
