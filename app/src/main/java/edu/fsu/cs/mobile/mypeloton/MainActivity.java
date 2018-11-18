@@ -69,13 +69,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("Main Activity", "Pressed Login Button");
-                boolean is_empty = true;
-                if (email.getText().toString() == "")
-                    is_empty = false;
-                else if (password.getText().toString() == "")
-                    is_empty = false;
-
-                if (!is_empty)
+                boolean is_empty = false;
+                String verifyEmail = email.getText().toString();
+                String verifyPass = password.getText().toString();
+                if(verifyEmail.matches(""))
+                    is_empty = true;
+                else if(verifyPass.matches(""))
+                    is_empty = true;
+                if (is_empty)
                     Toast.makeText(MainActivity.this, "Please Enter both Email and Password", Toast.LENGTH_SHORT).show();
                 else {
                     signInWithEmail(email.getText().toString(), password.getText().toString());
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void createAccountWithEmail(String email, String password) {
+    private void createAccountWithEmail(String email, final String password) {
 
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                 Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
                                 myIntent.putExtra("uid", user.getUid());
                                 myIntent.putExtra("email", user.getEmail());
+                                myIntent.putExtra("pass", password);
                                 startActivity(myIntent);
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     });
     }
 
-    private void signInWithEmail(String email, String password){
+    private void signInWithEmail(String email, final String password){
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
                             myIntent.putExtra("uid", user.getUid());
                             myIntent.putExtra("email", user.getEmail());
+                            myIntent.putExtra("pass", password);
                             startActivity(myIntent);
                         }
                         else {
@@ -213,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
             Intent mIntent =  new Intent(MainActivity.this, SearchActivity.class);
             mIntent.putExtra("uid", user.getUid());
             mIntent.putExtra("email",user.getEmail());
+
             startActivity(mIntent);
         }
     }

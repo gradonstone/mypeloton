@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,10 +21,18 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +44,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private Button requestButton;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private String uid, email;
+    private String uid, email, password;
+    private AuthCredential credential;
 
     LocationManager lm;
     double longitude, latitude;
@@ -61,6 +71,49 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 finish();
                 break;
             }
+            case R.id.delete_account:
+            {
+                final Intent mIntent = new Intent(SearchActivity.this, MainActivity.class);
+                if(user != null)
+                {
+                    String idToken = user.getIdToken(true).toString();
+                    if(idToken == null)
+                        credential = EmailAuthProvider.getCredential(user.getEmail(), null);
+                    else
+                        credential = GoogleAuthProvider.getCredential(idToken, null);
+
+                    user.reauthenticate(credential)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                mDatabase.child("requests").orderByChild("userID").equalTo(uid)
+                                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                                    snapshot.getRef().removeValue();
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+                                                startActivity(mIntent);
+                                            }
+                                            else
+                                                task.getException();
+                                        }
+                                    });
+                                }
+                            });
+                }
+            }
         }
         return true;
     }
@@ -79,6 +132,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         final FirebaseUser user = mAuth.getCurrentUser();
         uid = (String) getIntent().getExtras().get("uid");
         email = (String) getIntent().getExtras().get("email");
+        password = (String) getIntent().getExtras().get("password");
+
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,13 +144,14 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 int time = Integer.parseInt(timeString);
                 int distance = Integer.parseInt(distanceString);
                 String userID = uid;
-                String userEmail = email;
+                String userEmail = user.getEmail().toString();
 
                 //------------Get current location-------------
                 getLocation();
-                writeNewRequest(userID, userEmail, type, distance, time, longitude, latitude);
+                Request userRequest = writeNewRequest(userID, userEmail, type, distance, time, longitude, latitude);
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
                 myIntent.putExtra(SearchService.UID, uid);
+                myIntent.putExtra("userRequest", userRequest);
                 // start SearchService here
 
                 // todo: start search service
@@ -135,12 +191,13 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
     }
 
-    private void writeNewRequest(String userID, String email, String ride_type, int distance, int time, double longitude, double latitude)
+    private Request writeNewRequest(String userID, String email, String ride_type, int distance, int time, double longitude, double latitude)
     {
         //create a request object
         Request request = new Request(userID, email, ride_type, distance, time, longitude, latitude, 1);
         //throw it in the database under the requests 'table'
         mDatabase.child("requests").child(uid).setValue(request);
+        return request;
     }
 
     @Override

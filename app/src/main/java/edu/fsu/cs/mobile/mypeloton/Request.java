@@ -2,7 +2,9 @@ package edu.fsu.cs.mobile.mypeloton;
 
 import android.location.Location;
 
-public class Request {
+import java.io.Serializable;
+
+public class Request implements Serializable {
 
     public String userID;
     public String email;

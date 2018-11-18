@@ -46,6 +46,8 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
     private Button cancelRequest;
     private String uid;
     private List<Request> requestList;
+    private int checker = 0;
+    private Request request;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -71,10 +73,10 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
         uid = getIntent().getExtras().getString("uid");
         cancelRequest = (Button) findViewById(R.id.cancel_request_button);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        int time = 5;
+        request = (Request) getIntent().getSerializableExtra("userRequest");
 
         requestList = new ArrayList<>();
-        mDatabase.child("requests").orderByChild("time").equalTo(time)
+        mDatabase.child("requests").orderByChild("ride_type").equalTo(request.getRide_type())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -89,8 +91,21 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                                 int active = requestSnapshot.child("active").getValue(Integer.class);
                                 int longitude = requestSnapshot.child("longitude").getValue(Integer.class);
                                 int latitude = requestSnapshot.child("latitude").getValue(Integer.class);
-                                Request request = new Request(userID, email, rideType, distance, time, longitude, latitude, active);
-                                requestList.add(request);
+                                if(userID.matches(request.getUserID()))
+                                    checker = 1;
+                                if(!rideType.matches(request.getRide_type()))
+                                    checker = 1;
+                                if(distance != request.getDistance())
+                                    checker = 1;
+                                if(active == 0)
+                                    checker = 1;
+                                //check for long and latitude closeness
+                                if(checker == 0) {
+                                    Request request = new Request(userID, email, rideType, distance, time, longitude, latitude, active);
+                                    requestList.add(request);
+                                }
+                                else
+                                    checker = 0;
                             }
                         }
                     }
