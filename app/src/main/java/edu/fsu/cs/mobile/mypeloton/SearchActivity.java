@@ -1,6 +1,14 @@
 package edu.fsu.cs.mobile.mypeloton;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements LocationListener{
 
     private DatabaseReference mDatabase;
     private Spinner distanceSpinner, timeSpinner, typeSpinner;
@@ -28,7 +37,10 @@ public class SearchActivity extends AppCompatActivity {
     private FirebaseUser user;
     private String uid, email;
 
+    LocationManager lm;
+    double longitude, latitude;
 
+    //----------Options Menu-------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -67,7 +79,6 @@ public class SearchActivity extends AppCompatActivity {
         final FirebaseUser user = mAuth.getCurrentUser();
         uid = (String) getIntent().getExtras().get("uid");
         email = (String) getIntent().getExtras().get("email");
-
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,23 +90,23 @@ public class SearchActivity extends AppCompatActivity {
                 int distance = Integer.parseInt(distanceString);
                 String userID = uid;
                 String userEmail = email;
-                //placeholders for now
-                double longitude = 0;
-                double latitude = 0;
 
+                //------------Get current location-------------
+                getLocation();
                 writeNewRequest(userID, userEmail, type, distance, time, longitude, latitude);
-
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
                 myIntent.putExtra(SearchService.UID, uid);
-
                 // start SearchService here
+
+                // todo: start search service
+                startActivity(myIntent);
+
+                myIntent = new Intent(SearchActivity.this, SearchService.class);
+                myIntent.putExtra(SearchService.UID, uid);
                 myIntent.putExtra(SearchService.LONGITUDE, longitude);
                 myIntent.putExtra(SearchService.LATITUDE, latitude);
                 myIntent.putExtra(SearchService.DISTANCE, distance);
-
-
-
-                startActivity(myIntent);
+                startService(myIntent);
             }
         });
 
@@ -137,4 +148,34 @@ public class SearchActivity extends AppCompatActivity {
         super.onStart();
 
     }
+
+    void getLocation() {
+        try {
+            lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
+        }
+        catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void onLocationChanged(Location location) {
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Toast.makeText(SearchActivity.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
 }
