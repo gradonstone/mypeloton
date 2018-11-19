@@ -2,7 +2,7 @@
     <string name="app_name">MyPeloton</string>
     <string name="uname_hint">Enter an Email </string>
     <string name="pass_hint">Enter a Password </string>
-    <string name="welcome_message">Welcome to @appname </string>
+    <string name="welcome_message">Welcome to MyPeloton </string>
     <string name="login_button">Login </string>
     <string name="register_button">Register </string>
     <string-array name="ride_types">
