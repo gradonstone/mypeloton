@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,10 +23,11 @@ public class Messenger extends AppCompatActivity {
     FloatingActionButton button;
     EditText sendcontent;
     String messageContent,useremail;
+    Button backbutton;
     private DatabaseReference mDatabase;
     String recipient;
     ListView history;
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class Messenger extends AppCompatActivity {
         button= findViewById(R.id.send_button);
         sendcontent=findViewById(R.id.text_input);
         history = findViewById(R.id.message_history);
+        backbutton = findViewById(R.id.back);
         Log.i("Activity: Messenger","successfully navigated to "+ FirebaseAuth.getInstance().getCurrentUser().getEmail()+"'s messenger");
         if(FirebaseAuth.getInstance().getCurrentUser()==null)
             Log.i("Messenger","getcurrentuser=null");
@@ -49,6 +52,18 @@ public class Messenger extends AppCompatActivity {
                 //displayMessages();
             }
         });
+
+        backbutton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                finish();
+            }
+        });
+
+
+
+
+
 
         displayMessages();
     }
