@@ -114,6 +114,9 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                                 Location.distanceBetween(userLatitude, userLongitude, latitude,
                                         longitude, distanceBetween);
 
+                                // put in km
+                                distanceBetween[0] = distanceBetween[0]/1000;
+
                                 // float distanceBetween = userLocation.distanceTo(requestLocation);
                                 if (request.getDistance() < distanceBetween[0]
                                         || distance < distanceBetween[0])
@@ -142,6 +145,7 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                                     Request request = new Request(userID, email, rideType, distance, time, longitude, latitude, active);
                                     requestList.add(request);
                                     requestAdapter.add(new DisplayRequest(email, userID));
+
                                 }
                                 else
                                     checker = 0;
