@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-public class Messenger extends AppCompatActivity {
+public class Messenger extends OptionsMenuExtension {
 
     private FirebaseListAdapter<ChatMessage> fbadapter;
     FloatingActionButton button;
