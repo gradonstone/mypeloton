@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SearchActivity extends AppCompatActivity implements LocationListener{
+public class SearchActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private Spinner distanceSpinner, timeSpinner, typeSpinner;
@@ -54,8 +54,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private FirebaseUser user;
     private String uid;
     private AuthCredential credential;
-
-    LocationManager lm;
     double longitude, latitude;
 
     //Migrating from Request Activity
@@ -170,14 +168,17 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 String userEmail = user.getEmail().toString();
 
                 //------------Get current location-------------
-                getLocation();
+                getLastLocation();
                 Request userRequest = writeNewRequest(userID, userEmail, type, distance, time, longitude, latitude);
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
                 myIntent.putExtra(SearchService.UID, uid);
                 myIntent.putExtra("userRequest", userRequest);
+                myIntent.putExtra("distance", distanceString);
+                myIntent.putExtra("rideType", type);
                 // start SearchService here
 
                 // todo: start search service
+
                 startActivity(myIntent);
 
                 myIntent = new Intent(SearchActivity.this, SearchService.class);
@@ -223,36 +224,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         return request;
     }
 
-
-    void getLocation() {
-        try {
-            lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
-        }
-        catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public void onLocationChanged(Location location) {
-        longitude = location.getLongitude();
-        latitude = location.getLatitude();
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Toast.makeText(SearchActivity.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -276,9 +247,14 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                             mLatitudeText.setText(String.format(Locale.ENGLISH, "%s: %f",
                                     mLatitudeLabel,
                                     mLastLocation.getLatitude()));
+
                             mLongitudeText.setText(String.format(Locale.ENGLISH, "%s: %f",
                                     mLongitudeLabel,
                                     mLastLocation.getLongitude()));
+
+                            latitude = mLastLocation.getLatitude();
+                            longitude = mLastLocation.getLongitude();
+
                         } else {
                             Log.w(TAG, "getLastLocation:exception", task.getException());
                             showSnackbar(getString(R.string.no_location_detected));

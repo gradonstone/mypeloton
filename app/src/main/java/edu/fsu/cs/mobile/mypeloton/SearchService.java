@@ -35,8 +35,10 @@ public class SearchService extends IntentService {
             // get x, y and distance
             longitude = extras.getDouble(LONGITUDE);
             latitude = extras.getDouble(LATITUDE);
+            /*
             Log.i(TAG,"Longitude is =" + longitude);
             Log.i(TAG,"Latitude is = " + latitude);
+            */
 
         }
     }
