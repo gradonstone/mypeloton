@@ -28,6 +28,7 @@
         <service
             android:name=".SearchService"
             android:exported="false"></service>
+
     </application>
 
 </manifest>

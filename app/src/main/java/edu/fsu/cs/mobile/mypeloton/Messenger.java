@@ -36,7 +36,7 @@ public class Messenger extends AppCompatActivity {
             public void onClick(View view){
                 messageContent = sendcontent.getText().toString();
                 useremail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(messageContent,useremail,recipient));
+                mDatabase.child("messages").push().setValue(new ChatMessage(messageContent,useremail,recipient));
                 sendcontent.setText("");
             }
         });
@@ -68,6 +68,15 @@ public class Messenger extends AppCompatActivity {
             }
         };
         history.setAdapter(fbadapter);
+    }
+
+    private ChatMessage writeNewRequest(String uid, String recipient, String content)
+    {
+        //create a request object
+        ChatMessage message = new ChatMessage(uid,recipient,content);
+        //throw it in the database under the requests 'table'
+        mDatabase.child("requests").child(uid).setValue(message);
+        return message;
     }
 }
 
