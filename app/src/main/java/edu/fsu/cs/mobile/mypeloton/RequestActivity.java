@@ -36,6 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.DOMImplementation;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,13 +57,20 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
     private Request request;
     private ListView displayRequests;
     private Button message;
+    private TextView typeText, distanceText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
-
+        Intent intent = getIntent();
         uid = getIntent().getExtras().getString("uid");
+
+        typeText = findViewById(R.id.request_type_placeholder);
+        distanceText = findViewById(R.id.request_distance_placeholder);
+        typeText.setText(intent.getExtras().getString("rideType"));
+        distanceText.setText(intent.getExtras().getString("distance"));
+
         cancelRequest = (Button) findViewById(R.id.cancel_request_button);
         message = findViewById(R.id.Message);
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -69,8 +78,12 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
 
         displayRequests = (ListView) findViewById(R.id.request_list);
         requestAdapter = new DisplayRequestAdapter(this, R.layout.request_item);
-
         requestList = new ArrayList<>();
+        final double userLatitude = request.getLatitude();
+        final double userLongitude = request.getLongitude();
+        final Location userLocation = new Location("");
+        userLocation.setLatitude(userLatitude);
+        userLocation.setLongitude(userLongitude);
 
         mDatabase.child("requests").orderByChild("ride_type").equalTo(request.getRide_type())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -85,14 +98,43 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                                 int time = requestSnapshot.child("time").getValue(Integer.class);
                                 int distance = requestSnapshot.child("distance").getValue(Integer.class);
                                 int active = requestSnapshot.child("active").getValue(Integer.class);
-                                int longitude = requestSnapshot.child("longitude").getValue(Integer.class);
-                                int latitude = requestSnapshot.child("latitude").getValue(Integer.class);
+                                double longitude = requestSnapshot.child("longitude").getValue(Double.class);
+                                double latitude = requestSnapshot.child("latitude").getValue(Double.class);
                                 if(userID.matches(request.getUserID()))
                                     checker = 1;
                                 if(!rideType.matches(request.getRide_type()))
                                     checker = 1;
-                                if(distance != request.getDistance())
+
+                                // distance between in km
+                                Location requestLocation = new Location("");
+                                requestLocation.setLongitude(longitude);
+                                requestLocation.setLatitude(latitude);
+
+                                float distanceBetween[] = new float[1];
+                                Location.distanceBetween(userLatitude, userLongitude, latitude,
+                                        longitude, distanceBetween);
+
+                                // float distanceBetween = userLocation.distanceTo(requestLocation);
+                                if (request.getDistance() < distanceBetween[0]
+                                        || distance < distanceBetween[0])
+                                {
                                     checker = 1;
+                                }
+
+                                Log.i("Request Activity", "longitude: "
+                                        + Double.toString(longitude));
+                                Log.i("Request Activity", "latitude: "
+                                        + Double.toString(latitude));
+
+                                Log.i("Request Activity", "user longitude: "
+                                        + Double.toString(userLongitude));
+                                Log.i("Request Activity", "latitude: "
+                                        + Double.toString(userLatitude));
+
+
+                                Log.i("Request Activity", "Distance between: " +
+                                        Float.toString(distanceBetween[0]));
+
                                 if(active == 0)
                                     checker = 1;
                                 //check for long and latitude closeness
