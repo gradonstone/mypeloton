@@ -54,6 +54,7 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
     private int checker = 0;
     private Request request;
     private ListView displayRequests;
+    private Button message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
 
         uid = getIntent().getExtras().getString("uid");
         cancelRequest = (Button) findViewById(R.id.cancel_request_button);
+        message = findViewById(R.id.Message);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         request = (Request) getIntent().getSerializableExtra("userRequest");
 
@@ -119,6 +121,13 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                 mDatabase.child("requests").child(uid).child("active").setValue(0);
                 Intent myIntent = new Intent(RequestActivity.this, SearchActivity.class);
                 myIntent.putExtra("uid", uid);
+                startActivity(myIntent);
+            }
+        });
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(RequestActivity.this,Messenger.class);
                 startActivity(myIntent);
             }
         });
