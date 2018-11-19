@@ -170,7 +170,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 String userEmail = user.getEmail().toString();
 
                 //------------Get current location-------------
-                getLocation();
+                getLastLocation();
                 Request userRequest = writeNewRequest(userID, userEmail, type, distance, time, longitude, latitude);
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
                 myIntent.putExtra(SearchService.UID, uid);
@@ -276,9 +276,14 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                             mLatitudeText.setText(String.format(Locale.ENGLISH, "%s: %f",
                                     mLatitudeLabel,
                                     mLastLocation.getLatitude()));
+
                             mLongitudeText.setText(String.format(Locale.ENGLISH, "%s: %f",
                                     mLongitudeLabel,
                                     mLastLocation.getLongitude()));
+
+                            latitude = mLastLocation.getLatitude();
+                            longitude = mLastLocation.getLongitude();
+
                         } else {
                             Log.w(TAG, "getLastLocation:exception", task.getException());
                             showSnackbar(getString(R.string.no_location_detected));
