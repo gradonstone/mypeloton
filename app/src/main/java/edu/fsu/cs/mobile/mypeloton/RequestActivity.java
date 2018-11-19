@@ -86,10 +86,11 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
         userLocation.setLongitude(userLongitude);
 
         mDatabase.child("requests").orderByChild("ride_type").equalTo(request.getRide_type())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         requestList.clear();
+                        requestAdapter.clear();
                         if(dataSnapshot.exists()){
                             for(DataSnapshot requestSnapshot : dataSnapshot.getChildren()){
                                 String userID = requestSnapshot.child("userID").getValue(String.class);
