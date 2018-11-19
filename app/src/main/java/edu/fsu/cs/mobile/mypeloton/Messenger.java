@@ -1,5 +1,6 @@
 package edu.fsu.cs.mobile.mypeloton;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,9 @@ public class Messenger extends AppCompatActivity {
     String messageContent,useremail;
     private DatabaseReference mDatabase;
     String recipient;
+    ListView history;
+    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,14 +34,19 @@ public class Messenger extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         button= findViewById(R.id.send_button);
         sendcontent=findViewById(R.id.text_input);
+        history = findViewById(R.id.message_history);
         Log.i("Activity: Messenger","successfully navigated to "+ FirebaseAuth.getInstance().getCurrentUser().getEmail()+"'s messenger");
+        if(FirebaseAuth.getInstance().getCurrentUser()==null)
+            Log.i("Messenger","getcurrentuser=null");
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 messageContent = sendcontent.getText().toString();
                 useremail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                recipient = "null";
                 mDatabase.child("messages").push().setValue(new ChatMessage(messageContent,useremail,recipient));
                 sendcontent.setText("");
+                //displayMessages();
             }
         });
 
@@ -54,30 +63,28 @@ public class Messenger extends AppCompatActivity {
                             OR recipient = other person / requested user
                             Order by timestamp
 */
-        ListView history = findViewById(R.id.message_history);
-        fbadapter = new FirebaseListAdapter<ChatMessage>(this,ChatMessage.class,R.layout.ind_message,FirebaseDatabase.getInstance().getReference()){
+        fbadapter = new FirebaseListAdapter<ChatMessage>(this,ChatMessage.class,R.layout.ind_message,FirebaseDatabase.getInstance().getReference().child("messages")){
             @Override
             protected void populateView(View v, ChatMessage model, int position){
                 TextView messagecontent,messageuser,messagetime;
                 messagecontent = v.findViewById(R.id.text);
-                messageuser = v.findViewById(R.id.user);
+                messageuser = v.findViewById(R.id.user_output);
                 messagetime = v.findViewById(R.id.time);
+
                 messagecontent.setText(model.getText());
                 messageuser.setText(model.getUser());
-                //messagetime.setText(DateFormat.format("MM.DD.YYYY HH:mm:ss",model.getTime()));
+                messagetime.setText(DateFormat.format("MM-dd-yyyy HH:mm:ss",model.getTime()));
+                //Log.i("Messenger",model.getText()+"maybe?");
+                Log.i("Messenger",messagecontent.getText().toString());
+                Log.i("Messenger",messageuser.getText().toString());
+                //Log.i("Messenger", "populateView");
+
             }
         };
         history.setAdapter(fbadapter);
+        //history.setSelection(history.getCount() - 1);
     }
 
-    private ChatMessage writeNewRequest(String uid, String recipient, String content)
-    {
-        //create a request object
-        ChatMessage message = new ChatMessage(uid,recipient,content);
-        //throw it in the database under the requests 'table'
-        mDatabase.child("requests").child(uid).setValue(message);
-        return message;
-    }
 }
 
 
