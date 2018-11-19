@@ -1,6 +1,8 @@
 package edu.fsu.cs.mobile.mypeloton;
 
 
+import android.util.Log;
+
 import java.util.Date;
 
 public class ChatMessage {
@@ -19,6 +21,7 @@ public class ChatMessage {
     public ChatMessage(){}
 
     public String getText() {
+       // Log.i("Messenger",text);
         return text;
     }
 
@@ -35,6 +38,7 @@ public class ChatMessage {
     }
 
     public String getUser() {
+       // Log.i("Messenger",user);
         return user;
     }
 

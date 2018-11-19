@@ -43,12 +43,6 @@ public class DisplayRequestAdapter extends ArrayAdapter<DisplayRequest> {
 
         displayHolder.emailDisplay.setText(item.getEmail());
         displayHolder.userDisplay.setText(item.getUserID());
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return view;
     }
 }

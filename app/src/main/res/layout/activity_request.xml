@@ -84,23 +84,12 @@
         </LinearLayout>
     </LinearLayout>
 
-    <FrameLayout
+
+    <ListView
+        android:id="@+id/request_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"/>
 
-        <ListView
-            android:id="@+id/request_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/searching_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|center_horizontal|center"
-            android:text="Searching..."
-            android:textAlignment="center" />
-
-    </FrameLayout>
 
 </LinearLayout>

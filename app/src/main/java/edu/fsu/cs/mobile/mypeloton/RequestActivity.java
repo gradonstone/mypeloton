@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -86,10 +87,11 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
         userLocation.setLongitude(userLongitude);
 
         mDatabase.child("requests").orderByChild("ride_type").equalTo(request.getRide_type())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         requestList.clear();
+                        requestAdapter.clear();
                         if(dataSnapshot.exists()){
                             for(DataSnapshot requestSnapshot : dataSnapshot.getChildren()){
                                 String userID = requestSnapshot.child("userID").getValue(String.class);
@@ -160,6 +162,13 @@ public class RequestActivity extends AppCompatActivity implements ActivityCompat
                 });
 
         displayRequests.setAdapter(requestAdapter);
+
+        displayRequests.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(RequestActivity.this, "On item click " + position, Toast.LENGTH_LONG).show();
+            }
+        });
 
         cancelRequest.setOnClickListener(new View.OnClickListener() {
             @Override

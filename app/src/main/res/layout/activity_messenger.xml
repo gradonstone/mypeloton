@@ -23,19 +23,32 @@
         android:ems="10"
         android:hint="Enter Message"
         android:inputType="textMultiLine" />
-    
+
     <ListView
         android:id="@+id/message_history"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="513dp"
         android:layout_above="@id/send_button"
-        android:dividerHeight="16dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="16dp"
-        android:divider="@android:color/transparent">
+        android:layout_marginTop="39dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="16dp"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll">
 
     </ListView>
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="167dp"
+        android:layout_height="36dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorAccent"
+        android:text="Back"
+        android:textColor="@color/White" />
 
 
 </RelativeLayout>

@@ -5,28 +5,30 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/user"
+        android:id="@+id/user_output"
+        android:textColor="@color/colorAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:text="user"
         android:textStyle="bold|normal" />
 
     <TextView
         android:id="@+id/time"
-        android:textStyle="bold|normal"
-        android:layout_alignParentBottom="@+id/user"
-        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:layout_alignParentBottom="@+id/user_output"
+        android:layout_alignParentEnd="true"
+        android:text="time" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="123dp"
-        android:layout_marginTop="181dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/user_output"
+        android:text="text"
         android:textSize="20sp" />
 </RelativeLayout>
