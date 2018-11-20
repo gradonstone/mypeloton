@@ -46,7 +46,7 @@ import java.util.Locale;
 
 //Code inspired by GoogleSamples -> Android Play Location
 
-public class RequestActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class RequestActivity extends OptionsMenuExtension implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private DatabaseReference mDatabase;
     private Button cancelRequest;

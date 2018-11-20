@@ -1,6 +1,7 @@
 package edu.fsu.cs.mobile.mypeloton;
 
 import android.Manifest;
+import android.app.VoiceInteractor;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -49,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends OptionsMenuExtension {
 
     private DatabaseReference mDatabase;
     private Spinner distanceSpinner, timeSpinner, typeSpinner;
@@ -67,75 +68,6 @@ public class SearchActivity extends AppCompatActivity {
     protected Location mLastLocation;
     private String mLocationLabel;
     private TextView mLocationText;
-
-
-    //----------Options Menu-------------
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId())
-        {
-            // todo: clear back log
-            case R.id.log_out:
-            {
-                Intent mIntent = new Intent(SearchActivity.this, MainActivity.class);
-                FirebaseAuth.getInstance().signOut();
-                startActivity(mIntent);
-                finish();
-                break;
-            }
-            case R.id.delete_account:
-            {
-                final Intent mIntent = new Intent(SearchActivity.this, MainActivity.class);
-                if(user != null)
-                {
-                    String idToken = user.getIdToken(true).toString();
-                    if(idToken == null)
-                        credential = EmailAuthProvider.getCredential(user.getEmail(), null);
-                    else
-                        credential = GoogleAuthProvider.getCredential(idToken, null);
-
-                    user.reauthenticate(credential)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                mDatabase.child("requests").orderByChild("userID").equalTo(uid)
-                                                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                                    snapshot.getRef().removeValue();
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                            }
-                                                        });
-                                                startActivity(mIntent);
-                                            }
-                                            else
-                                                task.getException();
-                                        }
-                                    });
-                                }
-                            });
-                }
-            }
-        }
-        return true;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
