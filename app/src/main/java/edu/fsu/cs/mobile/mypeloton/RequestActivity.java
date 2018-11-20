@@ -52,13 +52,10 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
     private DatabaseReference mDatabase;
     private Button cancelRequest;
     private String uid;
-    private List<Request> requestList;
-    private ArrayAdapter<String> emails;
     private DisplayRequestAdapter requestAdapter;
     private int checker = 0;
     private Request request;
     private ListView displayRequests;
-    private Button message;
     private TextView typeText, distanceText;
 
     @Override
@@ -79,7 +76,6 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
 
         displayRequests = (ListView) findViewById(R.id.request_list);
         requestAdapter = new DisplayRequestAdapter(this, R.layout.request_item);
-        requestList = new ArrayList<>();
         final double userLatitude = request.getLatitude();
         final double userLongitude = request.getLongitude();
         final Location userLocation = new Location("");
@@ -90,7 +86,6 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        requestList.clear();
                         requestAdapter.clear();
                         if(dataSnapshot.exists()){
                             for(DataSnapshot requestSnapshot : dataSnapshot.getChildren()){
@@ -130,15 +125,13 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
                                 {
                                     checker = 1;
                                 }
-                                
+
 
 
                                 if(active == 0)
                                     checker = 1;
                                 //check for long and latitude closeness
                                 if(checker == 0) {
-                                    Request request = new Request(userID, email, rideType, distance, time, longitude, latitude, active);
-                                    requestList.add(request);
                                     requestAdapter.add(new DisplayRequest(email, userID));
 
                                 }

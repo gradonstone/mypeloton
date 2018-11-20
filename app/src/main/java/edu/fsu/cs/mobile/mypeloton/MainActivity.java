@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        // mGoogleSignInClient.signOut();
+        //so the user can choose the account they want to use each time they login with google
+        mGoogleSignInClient.signOut();
 
         googleLogin.setOnClickListener(new View.OnClickListener() {
             @Override

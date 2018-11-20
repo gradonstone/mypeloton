@@ -58,7 +58,6 @@ public class SearchActivity extends OptionsMenuExtension {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private String uid;
-    private AuthCredential credential;
     double longitude, latitude;
 
     //Migrating from Request Activity
