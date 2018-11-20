@@ -74,7 +74,6 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
         distanceText.setText(intent.getExtras().getString("distance"));
 
         cancelRequest = (Button) findViewById(R.id.cancel_request_button);
-        message = findViewById(R.id.Message);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         request = (Request) getIntent().getSerializableExtra("userRequest");
 
@@ -131,7 +130,7 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
                                 {
                                     checker = 1;
                                 }
-
+                                
 
 
                                 if(active == 0)
@@ -177,13 +176,7 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
                 startActivity(myIntent);
             }
         });
-        message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(RequestActivity.this,Messenger.class);
-                startActivity(myIntent);
-            }
-        });
+
     }
 
 
