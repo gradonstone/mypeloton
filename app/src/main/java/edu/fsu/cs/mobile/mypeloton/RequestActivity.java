@@ -31,6 +31,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -106,7 +107,7 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
                                     checker = 1;
                                 if(!rideType.matches(request.getRide_type()))
                                     checker = 1;
-
+                                /*
                                 // distance between in km
                                 Location requestLocation = new Location("");
                                 requestLocation.setLongitude(longitude);
@@ -136,7 +137,7 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
 
                                 Log.i("Request Activity", "Distance between: " +
                                         Float.toString(distanceBetween[0]));
-
+                                */
                                 if(active == 0)
                                     checker = 1;
                                 //check for long and latitude closeness
@@ -162,7 +163,11 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
         displayRequests.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(RequestActivity.this, "On item click " + position, Toast.LENGTH_LONG).show();
+                Intent myIntent = new Intent(RequestActivity.this, Messenger.class);
+                DisplayRequest item = (DisplayRequest) parent.getItemAtPosition(position);
+                myIntent.putExtra("selectedID", item.getUserID());
+                myIntent.putExtra("userID", uid);
+                startActivity(myIntent);
             }
         });
 
