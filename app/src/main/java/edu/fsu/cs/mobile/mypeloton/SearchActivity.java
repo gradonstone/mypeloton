@@ -5,6 +5,8 @@ import android.app.VoiceInteractor;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewDebug;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -42,6 +45,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,10 +66,8 @@ public class SearchActivity extends OptionsMenuExtension {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private FusedLocationProviderClient mFusedLocationClient;
     protected Location mLastLocation;
-    private String mLatitudeLabel;
-    private String mLongitudeLabel;
-    private TextView mLatitudeText;
-    private TextView mLongitudeText;
+    private String mLocationLabel;
+    private TextView mLocationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +83,10 @@ public class SearchActivity extends OptionsMenuExtension {
         final FirebaseUser user = mAuth.getCurrentUser();
         uid = (String) getIntent().getExtras().get("uid");
 
-        mLatitudeLabel = getResources().getString(R.string.latitude_label);
-        mLongitudeLabel = getResources().getString(R.string.longitude_label);
-        mLatitudeText = (TextView) findViewById((R.id.latitude_text));
-        mLongitudeText = (TextView) findViewById((R.id.longitude_text));
+
+
+        mLocationLabel = getResources().getString(R.string.location_label);
+        mLocationText = (TextView) findViewById((R.id.location_text));
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         requestButton.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +105,7 @@ public class SearchActivity extends OptionsMenuExtension {
                 getLastLocation();
                 Request userRequest = writeNewRequest(userID, userEmail, type, distance, time, longitude, latitude);
                 Intent myIntent = new Intent(SearchActivity.this, RequestActivity.class);
-                myIntent.putExtra(SearchService.UID, uid);
+                myIntent.putExtra("uid", uid);
                 myIntent.putExtra("userRequest", userRequest);
                 myIntent.putExtra("distance", distanceString);
                 myIntent.putExtra("rideType", type);
@@ -112,13 +114,6 @@ public class SearchActivity extends OptionsMenuExtension {
                 // todo: start search service
 
                 startActivity(myIntent);
-
-                myIntent = new Intent(SearchActivity.this, SearchService.class);
-                myIntent.putExtra(SearchService.UID, uid);
-                myIntent.putExtra(SearchService.LONGITUDE, longitude);
-                myIntent.putExtra(SearchService.LATITUDE, latitude);
-                myIntent.putExtra(SearchService.DISTANCE, distance);
-                startService(myIntent);
             }
         });
 
@@ -174,18 +169,33 @@ public class SearchActivity extends OptionsMenuExtension {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
+
                             mLastLocation = task.getResult();
                             //TO-DO: Push latitude and longitude into database
-                            mLatitudeText.setText(String.format(Locale.ENGLISH, "%s: %f",
-                                    mLatitudeLabel,
-                                    mLastLocation.getLatitude()));
-
-                            mLongitudeText.setText(String.format(Locale.ENGLISH, "%s: %f",
-                                    mLongitudeLabel,
-                                    mLastLocation.getLongitude()));
-
                             latitude = mLastLocation.getLatitude();
                             longitude = mLastLocation.getLongitude();
+                            String cityName = "";
+                            String stateName = "";
+                            Geocoder geocoder = new Geocoder(SearchActivity.this, Locale.getDefault());
+                            try {
+                                List <Address> address = geocoder.getFromLocation(latitude, longitude, 1);
+
+                                if (!address.isEmpty()) {
+                                    cityName = address.get(0).getLocality();
+                                    stateName = address.get(0).getAdminArea();
+                                }
+                                else
+                                    cityName =" Jax";
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+
+                            }
+
+                            mLocationText.setText(String.format(Locale.ENGLISH, "%s: %s, %s",
+                                    mLocationLabel,
+                                    cityName, stateName));
+
 
                         } else {
                             Log.w(TAG, "getLastLocation:exception", task.getException());

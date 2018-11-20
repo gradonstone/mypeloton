@@ -76,7 +76,7 @@
         android:text="Request Ride" />
 
     <TextView
-        android:id="@+id/latitude_text"
+        android:id="@+id/location_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
