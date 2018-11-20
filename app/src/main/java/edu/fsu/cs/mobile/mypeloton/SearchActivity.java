@@ -185,8 +185,10 @@ public class SearchActivity extends OptionsMenuExtension {
                                     cityName = address.get(0).getLocality();
                                     stateName = address.get(0).getAdminArea();
                                 }
-                                else
-                                    cityName =" Jax";
+                                else {
+                                    cityName = "Unknown";
+                                    stateName = "Unknown";
+                                }
 
                             } catch (IOException e) {
                                 e.printStackTrace();

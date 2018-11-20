@@ -13,7 +13,7 @@
         <item>Casual</item>
     </string-array>
 
-    <string name="location_label">Your Loction</string>
+    <string name="location_label">Your Current Location</string>
     <string name="no_location_detected">
         No location detected. Make sure location is enabled on the device.
     </string>
