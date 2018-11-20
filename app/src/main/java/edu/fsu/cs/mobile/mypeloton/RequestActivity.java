@@ -107,7 +107,7 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
                                     checker = 1;
                                 if(!rideType.matches(request.getRide_type()))
                                     checker = 1;
-                                /*
+
                                 // distance between in km
                                 Location requestLocation = new Location("");
                                 requestLocation.setLongitude(longitude);
@@ -140,7 +140,7 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
 
                                 Log.i("Request Activity", "Distance between: " +
                                         Float.toString(distanceBetween[0]));
-                                */
+
                                 if(active == 0)
                                     checker = 1;
                                 //check for long and latitude closeness
