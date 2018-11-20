@@ -120,26 +120,19 @@ public class RequestActivity extends OptionsMenuExtension implements ActivityCom
                                 // put in km
                                 distanceBetween[0] = distanceBetween[0]/1000;
 
-                                // float distanceBetween = userLocation.distanceTo(requestLocation);
+                                // if ride times are within 10 minutes of eachother
+                                if (java.lang.Math.abs(request.getTime() - time) > 10)
+                                {
+                                    checker = 1;
+                                }
+
                                 if (request.getDistance() < distanceBetween[0]
                                         || distance < distanceBetween[0])
                                 {
                                     checker = 1;
                                 }
 
-                                Log.i("Request Activity", "longitude: "
-                                        + Double.toString(longitude));
-                                Log.i("Request Activity", "latitude: "
-                                        + Double.toString(latitude));
 
-                                Log.i("Request Activity", "user longitude: "
-                                        + Double.toString(userLongitude));
-                                Log.i("Request Activity", "latitude: "
-                                        + Double.toString(userLatitude));
-
-
-                                Log.i("Request Activity", "Distance between: " +
-                                        Float.toString(distanceBetween[0]));
 
                                 if(active == 0)
                                     checker = 1;

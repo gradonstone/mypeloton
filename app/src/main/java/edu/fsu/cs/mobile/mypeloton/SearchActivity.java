@@ -124,9 +124,10 @@ public class SearchActivity extends OptionsMenuExtension {
         }
 
         Integer[] timeSpinnerArray = new Integer[12];
-        for (int i = 1; i <= timeSpinnerArray.length; i++)
+        int startTime = 20;
+        for (int i = 0; i < timeSpinnerArray.length; i++)
         {
-            timeSpinnerArray[i-1] = i*5;
+            timeSpinnerArray[i] = i*5 + startTime;
         }
 
         ArrayAdapter<Integer> timeAdapter = new ArrayAdapter<Integer>(
