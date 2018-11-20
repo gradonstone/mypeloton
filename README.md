@@ -1,9 +1,9 @@
 # mypeloton
 
 Additions since presentation:
-  Got messenger working
+  Messenger is now working. A messenger between users is established by clicking on a user's request
   
-Knoown Bugs:
+Known Issues:
   Messenger is a single messenger between users
   Location is sometimes not updated from emulator
   
